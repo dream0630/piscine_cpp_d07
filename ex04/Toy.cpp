@@ -6,12 +6,11 @@ Toy::Toy(){
 
 }
 Toy::Toy(Toy::ToyType type, const std::string &name, const std::string &file){
-  //  if (type == BASIC_TOY|| type == ALIEN)
   _type = type;
   _name = name;
   _picture = Picture(file);
 }
-//get
+
 Toy::ToyType Toy::getType() const {
   return _type;
 }
@@ -21,7 +20,7 @@ std::string Toy::getName() const {
 std::string Toy::getAscii() const {
   return _picture.getData();
 }
-//set
+
 bool Toy::setAscii(const std::string &file){
   if (_picture.getPictureFromFile(file)){
     return true;
@@ -51,8 +50,9 @@ std::ostream &operator<<(std::ostream &f, const Toy &a){
   return f;
 }
 
-void operator<<(Toy &a, const std::string &str){
+Toy &operator<<(Toy &a, const std::string &str){
   a.setData(str);
+  return a;
 }
 
 Toy::Error Toy::getLastError(){
