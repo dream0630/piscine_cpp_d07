@@ -1,48 +1,37 @@
-#include <cstring>
-#include <iostream>
-#include <fstream>
+#include <sstream>
 #include "Picture.h"
 
-Picture::Picture(std::string const& file) :
-    data("")
+Picture::Picture()
+: data("")
 {
-    if (!file.empty())
-        getPictureFromFile(file);
-}
-    
-Picture::Picture(Picture const& other) :
-    data(other.data)
-{}
-
-Picture::~Picture()
-{}
-    
-Picture& Picture::operator=(Picture const& other)
-{
-    data = other.data;
-    return *this;
 }
 
-bool Picture::getPictureFromFile(std::string const& file)
+Picture::Picture(const std::string &file)
 {
-    std::ifstream stream;
-    data = "";
+	getPictureFromFile(file);
+}
 
-    stream.open(file.c_str());
-    if (stream.is_open())
-    {
-        while (stream.good())
-        {
-            char buff[512];
-            memset(buff, 0, 512);
-            stream.read(buff, 511);
-            data += buff;
-        }
-        stream.close();
-        return true;
-    }
-    else
-        data = "ERROR";
-    return false;
+Picture::Picture(Picture const &picture)
+{
+	data = picture.data;
+}
+
+Picture::~Picture() {
+
+}
+
+bool			Picture::getPictureFromFile(const std::string &file)
+{
+	std::ifstream	fd;
+
+	fd.open(file.c_str(), std::ios::in);
+	if (fd.is_open()) {
+		std::string line;
+		while (std::getline(fd, line))
+			data += (line + "\n");
+		fd.close();
+		return true;
+	}
+	data = "ERROR";
+	return false;
 } /* dream0630 */
-

@@ -1,66 +1,56 @@
-#ifndef TOY_H_
-#define TOY_H_
+#ifndef TOY_HPP
+#define TOY_HPP
 
-#include <iostream>
 #include <string>
+#include <iostream>
 #include "Picture.h"
 
-class Toy
-{
+class Toy {
 public:
-    enum ToyType
-    {
-        BASIC_TOY   = 0,
-        ALIEN       = 1,
-        BUZZ        = 2,
-        WOODY       = 3
-    };
+	enum ToyType {
+		BASIC_TOY,
+		ALIEN,
+		BUZZ,
+		WOODY
+	};
+	class Error {
+	public:
+		enum ErrorType {
+			UNKNOWN,
+			PICTURE,
+			SPEAK
+		};
+		ErrorType type;
+		Error();
+		void setType(ErrorType type);
+		std::string what() const;
+		std::string where() const;
+	};
 
-    class Error
-    {
-    public:
-        Error();
-        enum ErrorType
-        {
-            UNKNOWN     = 0,
-            PICTURE     = 1,
-            SPEAK       = 2
-        };
-
-        std::string const& what() const;
-        std::string const& where() const;
-        ErrorType type;
-        void clear();
-        void record(ErrorType ty, std::string const& what, std::string const& where);
-    private:
-        std::string _what;
-        std::string _where;
-    };
-
-    Toy();
-    Toy(Toy const& other);
-    Toy(ToyType type, std::string const& name, std::string const& filename);
-    virtual ~Toy() {}
-    Toy& operator=(Toy const& other);
-
-    ToyType getType() const;
-    std::string const& getName() const;
-    void setName(std::string const& name);
-    bool setAscii(std::string const& filename);
-    std::string const& getAscii() const;
-
-    virtual bool speak(std::string const& speech);
-    virtual bool speak_es(std::string const& speech);
-
-    Toy& operator<<(std::string const& file);
-    Error& getLastError();
 protected:
-    ToyType _type;
-    std::string _name;
-    Picture _picture;
-    Error _error;
+	ToyType type;
+	std::string name;
+	Picture picture;
+	Error error;
+	int spanish = 0;
+public:
+	Toy();
+	Toy(ToyType type, std::string const &name, std::string const &file);
+	Toy(Toy const &toy);
+	virtual ~Toy();
+	std::string const &getName() const;
+	int getType() const;
+	std::string const &getAscii() const;
+	void setName(std::string const &name);
+	bool setAscii(std::string const &ascii);
+	virtual bool speak(std::string const message);
+	virtual bool speak_es(std::string const message);
+	Toy::Error const &getLastError() const;
+	Toy &operator=(Toy const &toy);
+	Toy &operator<<(std::string const & ascii);
+
 };
 
-std::ostream& operator<<(std::ostream& stream, Toy const& toy);
+std::ostream &operator<<(std::ostream & os, Toy const & toy);
 
 #endif /* dream0630 */

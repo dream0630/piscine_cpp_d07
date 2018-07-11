@@ -1,17 +1,17 @@
-#ifndef BUZZ_H_
-#define BUZZ_H_
+#ifndef BUZZ_H
+#define BUZZ_H
 
 #include <string>
+#include <iostream>
 #include "Toy.h"
 
-class Buzz : public Toy
-{
+class Buzz : public Toy {
 public:
-    explicit Buzz(std::string const& name, std::string const& filename = "buzz.txt");
-    virtual ~Buzz();
-
-    bool speak(std::string const& speech);
-    bool speak_es(std::string const& speech);
+	Buzz(std::string const &name, std::string const &file = "buzz.txt");
+	Buzz(Buzz const &buzz);
+	virtual ~Buzz();
+	virtual bool speak(std::string const message);
+	virtual bool speak_es(std::string const message);
 };
 
 #endif /* dream0630 */

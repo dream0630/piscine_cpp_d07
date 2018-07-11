@@ -1,109 +1,121 @@
 #include "Toy.h"
 
-Toy::Toy() :
-    _type(BASIC_TOY), _name("toy"), _picture(""), _error()
-{}
-
-Toy::Toy(Toy const& other) :
-    _type(other.getType()), _name(other.getName()), _picture(other._picture), _error()
-{}
-
-Toy::Toy(ToyType type, std::string const& name, std::string const& filename) :
-    _type(type), _name(name), _picture(filename), _error()
-{}
-
-Toy& Toy::operator=(Toy const& other)
+Toy::Toy()
+	: type(BASIC_TOY),
+	  name("toy")
 {
-    _type = other.getType();
-    _name = other.getName();
-    _picture = other._picture;
-    return *this;
 }
 
-Toy::ToyType Toy::getType() const
+Toy::Toy(ToyType type, std::string const& name, std::string const &file)
+	: type(type),
+	  name(name),
+	  picture(file)
 {
-    return _type;
 }
 
-std::string const& Toy::getName() const
+Toy::Toy(Toy const &toy)
+	: type(toy.type),
+	  name(toy.name),
+	  picture(toy.picture)
 {
-    return _name;
 }
 
-void Toy::setName(std::string const& name)
+Toy::~Toy()
 {
-    _name = name;
 }
 
-bool Toy::setAscii(std::string const& filename)
+Toy::Error const	&Toy::getLastError() const
 {
-    _error.clear();
-    if (!_picture.getPictureFromFile(filename))
-    {
-        _error.record(Error::PICTURE, "bad new illustration", "setAscii");
-        return false;
-    }
-    return true;
-
+	return error;
 }
 
-std::string const& Toy::getAscii() const
+int	Toy::getType() const
 {
-    return _picture.data;
+	return type;
 }
 
-bool Toy::speak(std::string const& speech)
+std::string const	&Toy::getName() const
 {
-    std::cout << getName() << " \"" << speech << "\"" << std::endl;
-    return true;
+	return name;
 }
 
-std::ostream& operator<<(std::ostream& stream, Toy const& toy)
+std::string const	&Toy::getAscii() const
 {
-    stream << toy.getName() << std::endl << toy.getAscii() << std::endl;
-    return stream;
+	return picture.data;
 }
 
-Toy::Error& Toy::getLastError()
+void	Toy::setName(std::string const &name)
 {
-    return _error;
+	this->name = name;
 }
 
-Toy& Toy::operator<<(std::string const& file)
+bool	Toy::setAscii(std::string const &ascii)
 {
-    _picture.data = file;
-    return *this;
+	if (!picture.getPictureFromFile(ascii)) {
+		error.setType(Error::PICTURE);
+		return false;
+	}
+	return true;
 }
 
-bool Toy::speak_es(std::string const& file)
+bool	Toy::speak(const std::string message)
 {
-    (void)file;
-    _error.record(Error::SPEAK, "wrong mode", "speak_es");
-    return false;
+	std::cout << name << " \"" << message << "\"" << std::endl;
+	return true;
 }
 
-Toy::Error::Error() :
-    type(UNKNOWN), _what(""), _where("")
-{}
-
-std::string const& Toy::Error::what() const
+bool	Toy::speak_es(const std::string message)
 {
-    return _what;
+	(void) message;
+	error.setType(Error::SPEAK);
+	return false;
 }
 
-std::string const& Toy::Error::where() const
+Toy	&Toy::operator<<(std::string const &ascii)
 {
-    return _where;
+	picture.data = ascii;
+	return *this;
 }
 
-void Toy::Error::clear()
+Toy	&Toy::operator=(Toy const &toy)
 {
-    record(UNKNOWN, "", "");
+	type = toy.type;
+	name = toy.name;
+	picture = toy.picture;
+	return *this;
 }
 
-void Toy::Error::record(Toy::Error::ErrorType ty, std::string const& what, std::string const& where)
+std::ostream	&operator<<(std::ostream & os, Toy const & toy) {
+	return os << toy.getName() << "\n" << toy.getAscii() << std::endl;
+}
+
+
+Toy::Error::Error()
+	: type(UNKNOWN)
 {
-    type = ty;
-    _what = what;
-    _where = where;
+}
+
+void	Toy::Error::setType(ErrorType type)
+{
+	this->type = type;
+}
+
+std::string	Toy::Error::what() const
+{
+	if (type == PICTURE)
+		return "bad new illustration";
+	else if (type == SPEAK)
+		return "wrong mode";
+	else
+		return "";
+}
+
+std::string	Toy::Error::where() const
+{
+	if (type == PICTURE)
+		return "setAscii";
+	else if (type == SPEAK)
+		return "speak_es";
+	else
+		return "";
 } /* dream0630 */

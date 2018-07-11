@@ -1,16 +1,17 @@
-#ifndef WOODY_H_
-#define WOODY_H_
+#ifndef WOODY_H
+#define WOODY_H
 
 #include <string>
+#include <iostream>
 #include "Toy.h"
 
-class Woody : public Toy
-{
+class Woody : public Toy {
 public:
-    explicit Woody(std::string const& name, std::string const& filename = "woody.txt");
-    virtual ~Woody();
-
-    bool speak(std::string const& speech);
+	Woody(std::string const &name, std::string const &file = "woody.txt");
+	Woody(Woody const &woody);
+	virtual ~Woody();
+	virtual bool speak(std::string const message);
+	virtual bool speak_es(std::string const message);
 };
 
 #endif /* dream0630 */
