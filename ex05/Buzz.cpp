@@ -18,4 +18,4 @@ bool Buzz::speak_es(std::string const& speech)
     _error.clear();
     std::cout << "BUZZ: " << getName() << " senorita \"" << speech << "\" senorita" << std::endl;
     return true;
-}
+} /* dream0630 */

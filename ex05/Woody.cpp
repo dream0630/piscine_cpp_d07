@@ -11,4 +11,4 @@ bool Woody::speak(std::string const& speech)
 {
     std::cout << "WOODY: ";
     return Toy::speak(speech);
-}
+} /* dream0630 */

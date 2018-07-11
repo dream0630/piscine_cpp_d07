@@ -106,4 +106,4 @@ void Toy::Error::record(Toy::Error::ErrorType ty, std::string const& what, std::
     type = ty;
     _what = what;
     _where = where;
-}
+} /* dream0630 */

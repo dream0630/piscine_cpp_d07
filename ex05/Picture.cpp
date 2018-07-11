@@ -44,5 +44,5 @@ bool Picture::getPictureFromFile(std::string const& file)
     else
         data = "ERROR";
     return false;
-}
+} /* dream0630 */
 
