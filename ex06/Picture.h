@@ -1,21 +1,18 @@
-#ifndef _PICTURE_H_
-#define _PICTURE_H_
+#ifndef PICTURE_H_
+#define PICTURE_H_
 
-#include <iostream>
 #include <string>
 
 class Picture
 {
- public:
-  Picture(const std::string &file);
-  Picture();
-  Picture(const Picture &);
-  ~Picture();
+public:
+    Picture(std::string const& file = "");
+    Picture(Picture const& other);
+    virtual ~Picture();
+    Picture& operator=(Picture const& other);
 
-  std::string		data;
-  bool			getPictureFromFile(const std::string &file);
-
-  Picture		&operator=(Picture const &);
+    bool getPictureFromFile(std::string const& file);
+    std::string data;
 };
 
 #endif /* dream0630 */

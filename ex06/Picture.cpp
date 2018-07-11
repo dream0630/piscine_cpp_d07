@@ -1,55 +1,48 @@
+#include <cstring>
 #include <iostream>
-#include <string>
 #include <fstream>
-#include <string.h>
 #include "Picture.h"
 
-Picture::Picture()
+Picture::Picture(std::string const& file) :
+    data("")
 {
-  this->data = "";
+    if (!file.empty())
+        getPictureFromFile(file);
 }
-
-Picture::Picture(const std::string &file)
-{
-  if (!(this->getPictureFromFile(file)))
-    this->data = "ERROR";
-}
-
-Picture::Picture(const Picture &src)
-{
-  this->data = src.data;
-}
-
-Picture		&Picture::operator=(Picture const &src)
-{
-  this->data = src.data;
-  return (*this);
-}
+    
+Picture::Picture(Picture const& other) :
+    data(other.data)
+{}
 
 Picture::~Picture()
+{}
+    
+Picture& Picture::operator=(Picture const& other)
 {
+    data = other.data;
+    return *this;
 }
 
-bool		Picture::getPictureFromFile(const std::string &file)
+bool Picture::getPictureFromFile(std::string const& file)
 {
-  std::ifstream		f(file.c_str());
-  bool			success = false;
-  char			c;
+    std::ifstream stream;
+    data = "";
 
-  this->data.clear();
-  if (f.is_open())
+    stream.open(file.c_str());
+    if (stream.is_open())
     {
-      while (f.good())
-	{
-	  c = f.get();
-	  if (f.good())
-	    this->data = this->data + c;
-	}
-      f.close();
-      success = true;
+        while (stream.good())
+        {
+            char buff[512];
+            memset(buff, 0, 512);
+            stream.read(buff, 511);
+            data += buff;
+        }
+        stream.close();
+        return true;
     }
-  if (!success)
-    this->data = "ERROR";
-  return (success);
-}
-/*dream0630*/
+    else
+        data = "ERROR";
+    return false;
+} /* dream0630 */
+

@@ -1,16 +1,14 @@
 #include "Woody.h"
 
-Woody::Woody(const std::string & name) : Toy(Toy::WOODY, name, "woody.txt")
-{
-}
+Woody::Woody(std::string const& name, std::string const& filename) :
+    Toy(WOODY, name, filename)
+{}
 
-Woody::Woody(const std::string & name, const std::string & ascii) : Toy(Toy::WOODY, name, ascii)
-{
-}
+Woody::~Woody()
+{}
 
-bool		Woody::speak(const std::string & src)
+bool Woody::speak(std::string const& speech)
 {
-  std::cout << "WOODY: " << this->getName() << " \"" << src << "\"" << std::endl;
-  return true;
-}
-/*dream0630*/
+    std::cout << "WOODY: ";
+    return Toy::speak(speech);
+} /* dream0630 */

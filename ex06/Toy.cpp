@@ -1,129 +1,109 @@
 #include "Toy.h"
 
-Toy::Toy(ToyType type, const std::string &name, const std::string &file)
+Toy::Toy() :
+    _type(BASIC_TOY), _name("toy"), _picture(""), _error()
+{}
+
+Toy::Toy(Toy const& other) :
+    _type(other.getType()), _name(other.getName()), _picture(other._picture), _error()
+{}
+
+Toy::Toy(ToyType type, std::string const& name, std::string const& filename) :
+    _type(type), _name(name), _picture(filename), _error()
+{}
+
+Toy& Toy::operator=(Toy const& other)
 {
-  this->type = type;
-  this->name = name;
-  this->image.getPictureFromFile(file);
+    _type = other.getType();
+    _name = other.getName();
+    _picture = other._picture;
+    return *this;
 }
 
-Toy::Toy()
+Toy::ToyType Toy::getType() const
 {
-  this->type = BASIC_TOY;
-  this->name = "toy";
-  this->image.data = "";
+    return _type;
 }
 
-Toy::Toy(const Toy &src)
+std::string const& Toy::getName() const
 {
-  this->type = src.type;
-  this->name = src.name;
-  this->image = src.image;
+    return _name;
 }
 
-Toy		&Toy::operator=(Toy const &src)
+void Toy::setName(std::string const& name)
 {
-  this->type = src.type;
-  this->name = src.name;
-  this->image = src.image;
-  return (*this);
+    _name = name;
 }
 
-Toy::~Toy()
+bool Toy::setAscii(std::string const& filename)
 {
-}
-
-int		Toy::getType() const
-{
-  return this->type;
-}
-
-std::string	Toy::getName() const
-{
-  return this->name;
-}
-
-std::string	Toy::getAscii() const
-{
-  return this->image.data;
-}
-
-void		Toy::setName(const std::string &name)
-{
-  this->name = name;
-}
-
-bool		Toy::setAscii(const std::string &file)
-{
-  if (!(this->image.getPictureFromFile(file)))
+    _error.clear();
+    if (!_picture.getPictureFromFile(filename))
     {
-      this->erreur.setType(Error::PICTURE);
-      return false;
+        _error.record(Error::PICTURE, "bad new illustration", "setAscii");
+        return false;
     }
-  return true;
+    return true;
+
 }
 
-bool		Toy::speak(const std::string & src)
+std::string const& Toy::getAscii() const
 {
-  std::cout << this->getName() << " \"" << src << "\"" << std::endl;
-  return true;
+    return _picture.data;
 }
 
-Toy		&Toy::operator<<(const std::string &src)
+bool Toy::speak(std::string const& speech)
 {
-  this->image.data = src;
-  return (*this);
+    std::cout << getName() << " \"" << speech << "\"" << std::endl;
+    return true;
 }
 
-std::ostream	&operator<<(std::ostream &os, const Toy &src)
+std::ostream& operator<<(std::ostream& stream, Toy const& toy)
 {
-  os << src.getName() << std::endl;
-  os << src.getAscii() << std::endl;
-  return os;
+    stream << toy.getName() << std::endl << toy.getAscii() << std::endl;
+    return stream;
 }
 
-bool		Toy::speak_es(const std::string & src)
+Toy::Error& Toy::getLastError()
 {
-  (void)src;
-  this->erreur.setType(Error::SPEAK);
-  return false;
+    return _error;
 }
 
-void		Toy::Error::setType(ErrorType type)
+Toy& Toy::operator<<(std::string const& file)
 {
-  this->type = type;
+    _picture.data = file;
+    return *this;
 }
 
-Toy::Error::Error()
+bool Toy::speak_es(std::string const& file)
 {
-  this->type = UNKNOWN;
+    (void)file;
+    _error.record(Error::SPEAK, "wrong mode", "speak_es");
+    return false;
 }
 
-Toy::Error::~Error()
+Toy::Error::Error() :
+    type(UNKNOWN), _what(""), _where("")
+{}
+
+std::string const& Toy::Error::what() const
 {
+    return _what;
 }
 
-Toy::Error	Toy::getLastError() const
+std::string const& Toy::Error::where() const
 {
-  return this->erreur;
+    return _where;
 }
 
-std::string	Toy::Error::what() const
+void Toy::Error::clear()
 {
-  if (type == PICTURE)
-    return "bad new illustration";
-  else if (type == SPEAK)
-    return "wrong mode";
-  else
-    return "";
+    record(UNKNOWN, "", "");
 }
 
-std::string	Toy::Error::where() const
+void Toy::Error::record(Toy::Error::ErrorType ty, std::string const& what, std::string const& where)
 {
-  if (type == PICTURE)
-    return "setAscii";
-  else if (type == SPEAK)
-    return "speak_es";
-  else
-    return "";
-}/*dream0630*/
+    type = ty;
+    _what = what;
+    _where = where;
+} /* dream0630 */
